@@ -1,0 +1,74 @@
+@using EPiServer.Core.Internal
+@using OptimizelyDemo.Common.Models.Blocks
+@using EPiServer.Web.Mvc.Html
+@using OptimizelyDemo.Common.Models.Media
+@using OptimizelyDemo.Common.Models.Pages
+@using OptimizelyDemo.Common.Helpers
+@using Serilog
+@model SitePage
+
+@{
+    using (new FunctionTracer())
+    {
+        try
+        {
+            <header class="header" style="background: #242424;">
+                <div class="container">
+                    <div class="itemsWrap">
+                        <div class="logoWrap">
+                            <a href="/" class="logoImg">
+                                <div class="logo">
+                                    <img src="@Url.ContentUrl(Model.HeaderLogo)" alt="EAU Logo" />
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="headNav">
+                            <nav class="primaryNavigation">
+                                <ul class="mainMenu">
+                                    <li class="menuList active">
+                                        <a href="/"><span class="resizeable menu16">Home</span></a>
+                                    </li>
+                                    <li class="menuList">
+                                        <a href="#"><span class="resizeable menu16">Programmes</span></a>
+                                    </li>
+                                    <li class="menuList">
+                                        <a href="#"><span class="resizeable menu16">Admissions</span></a>
+                                    </li>
+                                    <li class="menuList">
+                                        <a href="#"><span class="resizeable menu16">Student Life</span></a>
+                                    </li>
+                                    <li class="menuList">
+                                        <a href="#"><span class="resizeable menu16">About Us</span></a>
+                                    </li>
+                                </ul>
+                            </nav>
+
+                            <div class="secondaryNavigation">
+                                <ul>
+                                    <li>
+                                        <a href="#" class="search-icon">
+                                            <img src="~/assets/img/icons/search-icon.svg" title="Search" alt="Search" class="insvg" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="btn btnSmall secondaryBtn white">Apply Now</a>
+                                    </li>
+                                    <li class="d-lg-none">
+                                        <a href="#" class="hamburger-menu">
+                                            <img src="~/assets/img/icons/hamburgerIcon.svg" alt="Menu" class="insvg" />
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error rendering Header component");
+        }
+    }
+}

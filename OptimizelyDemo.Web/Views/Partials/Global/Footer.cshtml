@@ -1,0 +1,76 @@
+@using EPiServer.Core.Internal
+@using OptimizelyDemo.Common.Models.Blocks
+@using EPiServer.Web.Mvc.Html
+@using OptimizelyDemo.Common.Models.Media
+@using OptimizelyDemo.Common.Models.Pages
+@using OptimizelyDemo.Common.Helpers
+@using Serilog
+@model SitePage
+
+@{
+    using (new FunctionTracer())
+    {
+        try
+        {
+            <footer class="footer-wrapper">
+                <div class="container">
+                    <div class="logoWrap">
+                        <a href="/" class="logoImg">
+                            <div class="logo">
+                                <img src="@Url.ContentUrl(Model.HeaderLogo)" alt="EAU Logo" />
+                            </div>
+                        </a>
+                    </div>
+                    <div class="fotter-content">
+                        <div class="links-wrapper row">
+                            <div class="links-col col-md-3">
+                                <div class="heading6 text-bold">Academic</div>
+                                <ul class="toggle show">
+                                    <li><a href="#" class="body16">Undergraduate</a></li>
+                                    <li><a href="#" class="body16">Postgraduate</a></li>
+                                    <li><a href="#" class="body16">Professional</a></li>
+                                </ul>
+                            </div>
+                            <div class="links-col col-md-3">
+                                <div class="heading6 text-bold">Quick Links</div>
+                                <ul class="toggle show">
+                                    <li><a href="#" class="body16">Campus Tour</a></li>
+                                    <li><a href="#" class="body16">News & Events</a></li>
+                                    <li><a href="#" class="body16">Contact Us</a></li>
+                                </ul>
+                            </div>
+                            <div class="links-col col-md-3">
+                                <div class="heading6 text-bold">Connect</div>
+                                <div class="social-wrapper d-flex">
+                                    <a href="#"><img src="~/assets/img/icons/fotter-facebook.svg" alt="Facebook" /></a>
+                                    <a href="#"><img src="~/assets/img/icons/fotter-x.svg" alt="X" /></a>
+                                    <a href="#"><img src="~/assets/img/icons/footer-linkedin.svg" alt="LinkedIn" /></a>
+                                    <a href="#"><img src="~/assets/img/icons/fotter-youtube.svg" alt="YouTube" /></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="copyright-wrapper">
+                            <div class="fotter-divider"></div>
+                            <div class="copyright-content d-flex justify-content-between align-items-center">
+                                <div class="copyright-notice body14">
+                                    &copy; @DateTime.Now.Year Emirates Aviation University. All rights reserved.
+                                </div>
+                                <div class="copyright-links">
+                                    <ul class="d-flex">
+                                        <li><a href="#" class="body14">Privacy Policy</a></li>
+                                        <li><a href="#" class="body14">Terms of Use</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error rendering Footer component");
+        }
+    }
+}

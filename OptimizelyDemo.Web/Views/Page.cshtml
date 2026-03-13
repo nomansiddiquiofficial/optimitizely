@@ -1,0 +1,42 @@
+@using Serilog
+@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using OptimizelyDemo.Common.Models.Pages
+@using OptimizelyDemo.Common.Helpers
+@using OptimizelyDemo.Core.Repositories.Interfaces
+@model BasePage
+@inject IGetSiteContent siteContent
+
+@{
+    var site = siteContent.GetSiteData() as SitePage;
+    Layout = Constants.LayoutViewLocation;
+}
+
+<div class="page-container">
+    @{
+        try
+        {
+            @await Html.PartialAsync($"{Constants.GlobalViewLocation}/Header.cshtml", site)
+
+            if (Model.Components != null && Model.Components.FilteredItems.Any())
+            {
+                foreach (var item in Model.Components.FilteredItems)
+                {
+                    var content = item.LoadContent();
+                    if (content == null) continue;
+
+                    var typeName = content.GetOriginalType().Name;
+
+                    @await Html.PartialAsync($"{Constants.ComponentsViewLocation}/{typeName}.cshtml", content)
+                }
+            }
+
+            @await Html.PartialAsync($"{Constants.GlobalViewLocation}/Footer.cshtml", site)
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error rendering Page content");
+        }
+
+    }
+</div>

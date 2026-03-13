@@ -1,0 +1,157 @@
+@using EPiServer.Core.Internal
+@using OptimizelyDemo.Common.Models.Blocks
+@using EPiServer.Web.Mvc.Html
+@using OptimizelyDemo.Common.Models.Media
+@using OptimizelyDemo.Common.Helpers
+@using Serilog
+@inject EPiServer.IContentLoader ContentLoader
+@model HeroBanner
+
+@{
+    using (new FunctionTracer())
+    {
+        try
+        {
+            <section class="breadcrumbs-banner hero-banner" role="banner">
+                <div class="container">
+                    <div class="hero-content">
+                        @* Heading *@
+                        @if (!string.IsNullOrEmpty(Model.Heading))
+                        {
+                            <h1 class="hero-header">@Model.Heading</h1>
+                        }
+
+                        @* Description *@
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <p class="hero-description">@Model.Description</p>
+                        }
+
+                        @* Hero Image *@
+                        @if (Model.Image != null)
+                        {
+                            var image = ContentLoader.Get<OptimizelyDemo.Common.Models.ImageFile>(Model.Image);
+                            <div class="hero-image">
+                                <img src="@Url.ContentUrl(Model.Image)" alt="@image.AltText" />
+                            </div>
+                        }
+
+                        @* CTA Button *@
+                        @if (Model.Cta3 != null)
+                        {
+                            <a href="@Model.Cta3.Href" target="@Model.Cta3.Target" class="btn hero-cta">@Model.Cta3.Text</a>
+                        }
+
+                        @* Optional Items (Blocks) *@
+                        @if (Model.Items != null && Model.Items.Items != null)
+                        {
+                            <div class="hero-items">
+                                @foreach (var item in Model.Items.Items.FilteredItems)
+                                {
+                                    var block = item.LoadContent() as HeadingWithDescriptionBlockListItem;
+                                    if (block != null)
+                                    {
+                                        <div class="hero-item">
+                                            <h3>@block.Heading</h3>
+                                            <p>@block.Description</p>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+
+            <style>
+                /* Container & Hero Section */
+                .hero-banner {
+                    background: linear-gradient(rgba(0,0,,1), rgba(0,0,0,1)), url('/path/to/default-bg.jpg') no-repeat center center;
+                    background-size: cover;
+                    padding: 80px 0;
+                    color: #000;
+                    text-align: center;
+                    position: relative;
+                }
+
+                /* Main Heading */
+                .hero-header {
+                    font-size: 3rem;
+                    font-weight: 700;
+                    margin-bottom: 20px;
+                }
+
+                /* Description */
+                .hero-description {
+                    font-size: 1.2rem;
+                    margin-bottom: 40px;
+                    max-width: 700px;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+
+                /* Hero Image */
+                .hero-image img {
+                    max-width: 100%;
+                    height: auto;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+                    margin-bottom: 30px;
+                }
+
+                /* CTA Button */
+                .hero-cta {
+                    display: inline-block;
+                    background: #ff5a5f;
+                    color: #fff;
+                    font-weight: 600;
+                    padding: 15px 35px;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                }
+
+                    .hero-cta:hover {
+                        background: #e04e50;
+                        transform: translateY(-2px);
+                    }
+
+                /* Optional Items/Blocks */
+                .hero-items {
+                    display: flex;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    gap: 20px;
+                    margin-top: 50px;
+                }
+
+                .hero-item {
+                    background: rgba(255,255,255,0.1);
+                    padding: 20px 25px;
+                    border-radius: 12px;
+                    max-width: 250px;
+                    flex: 1;
+                    transition: transform 0.3s ease, background 0.3s ease;
+                }
+
+                    .hero-item:hover {
+                        transform: translateY(-5px);
+                        background: rgba(255,255,255,0.2);
+                    }
+
+                    .hero-item h3 {
+                        font-size: 1.2rem;
+                        margin-bottom: 10px;
+                    }
+
+                    .hero-item p {
+                        font-size: 0.95rem;
+                    }
+            </style>
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error rendering HeroBanner component");
+        }
+    }
+}

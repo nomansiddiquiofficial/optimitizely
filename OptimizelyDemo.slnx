@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="OptimizelyDemo.Common\OptimizelyDemo.Common.csproj" />
+  <Project Path="OptimizelyDemo.Core\OptimizelyDemo.Core.csproj" />
+  <Project Path="OptimizelyDemo.Web\OptimizelyDemo.Web.csproj" />
+</Solution>

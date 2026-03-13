@@ -1,0 +1,126 @@
+﻿@using EPiServer.Core.Internal
+@using OptimizelyDemo.Common.Models
+@using OptimizelyDemo.Common.Models.Blocks
+@using EPiServer.Web.Mvc.Html
+@using OptimizelyDemo.Common.Models.Media
+@using OptimizelyDemo.Common.Helpers
+@using Serilog
+@inject EPiServer.IContentLoader ContentLoader
+@model AccordionWithImage
+
+@{
+    using (new FunctionTracer())
+    {
+        try
+        {
+@if (Model != null)
+{
+    <section class="sec-padded" data-aos="fade-up">
+        <div class="accordion-section-wrapper">
+            <div class="container">
+
+                <div class="row align-items-center">
+
+                    <div class="accordions col-lg-5">
+
+                        @if (!string.IsNullOrEmpty(Model.Heading))
+                        {
+                            <div class="title-lg">
+                                <h2>@Model.Heading</h2>
+                            </div>
+                        }
+
+                        <div class="accordion accordion-flush accordion-ui" id="eventsHappeningAccordions">
+
+                            @if (Model.Items != null)
+                            {
+                                int index = 0;
+
+                                foreach (var item in Model.Items.Items.FilteredItems)
+                                {
+                                    var block = item.LoadContent() as HeadingWithDescriptionBlockListItem;
+
+                                    if (block != null && block is HeadingWithDescriptionBlockListItem)
+                                    {
+                                        <div class="accordion-item" id="@block.Heading?.Replace(" ", "-")">
+
+                                            <div class="accordion-header heading2" id="flush-heading-@index">
+
+                                                <button class="@(index == 0 ? "accordion-button" : "accordion-button collapsed")"
+                                                        type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-@index"
+                                                        aria-expanded="@(index == 0 ? "true" : "false")">
+
+                                                    <div class="heading5">@block.Heading</div>
+
+                                                </button>
+
+                                            </div>
+
+                                            <div id="flush-@index"
+                                                 class="accordion-collapse collapse @(index == 0 ? "show" : "")"
+                                                 data-bs-parent="#eventsHappeningAccordions">
+
+                                                @if (!string.IsNullOrEmpty(block.Description))
+                                                {
+                                                    <div class="accordion-body">
+                                                        @block.Description
+                                                    </div>
+                                                }
+
+                                            </div>
+
+                                        </div>
+
+                                        index++;
+                                    }
+                                }
+                            }
+
+                        </div>
+
+                        @if (Model.Cta3 != null)
+                        {
+                            <div class="btn-container">
+                                <a href="@Model.Cta3.Href"
+                                   target="@Model.Cta3.Target"
+                                   class="btn primaryBtn small">
+
+                                    <span>@Model.Cta3.Text</span>
+
+                                </a>
+                            </div>
+                        }
+
+                    </div>
+
+
+                    <div class="circle-animation-wrapper col-lg-4 offset-lg-2">
+
+                        @if (Model.Image != null)
+                        {
+                            var image = ContentLoader.Get<ImageFile>(Model.Image);
+
+                            <div class="circle-animation">
+                                <img src="@Url.ContentUrl(Model.Image)" alt="@image.AltText" />
+                                <div class="circle-inner"></div>
+                                <div class="circle-outer"></div>
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+}
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error rendering AccordionWithImage component");
+        }
+    }
+}
